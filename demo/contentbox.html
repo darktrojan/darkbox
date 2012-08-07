@@ -15,20 +15,20 @@
 
 var test = document.getElementById('test');
 
-_loadList.push(function() {
+window.onload = function() {
 	ContentBox.setContent(test, 600, 400);
 	ContentBox.beforeHide = function() {
 		test.style.background = '';
 		ContentBox.resize(600, 400);
 		return true;
 	};
-	ContentBox.afterShow = function () {
+	ContentBox.afterShow = function() {
 		test.style.background = 'green';
 		ContentBox.resize(600, 200);
 	};
 
-	setTimeout('ContentBox.show ();', 500);
-});
+	setTimeout('ContentBox.show();', 500);
+};
 
 </script>
 </body>

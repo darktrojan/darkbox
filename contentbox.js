@@ -2,11 +2,25 @@ var ContentBox = {
 
 	tFunc: null,
 
+	onload: function() {
+		if (window.removeEventListener) {
+			window.removeEventListener('DOMContentLoaded', ContentBox.onload, false);
+			window.removeEventListener('load', ContentBox.onload, false);
+		} else {
+			if (document.readyState != "complete")
+				return;
+			document.onreadystatechange = null;
+			window.detachEvent('onload', ContentBox.onload);
+		}
+		ContentBox.init();
+	},
+
 	init: function() {
 		var self = this;
 		this.hidden = true;
 
-		$cna(document.body, 'db-hidden');
+		if (!/\bdb-hidden\b/.test(document.body.className))
+			document.body.className += ' db-hidden';
 
 		this.t = false;
 		if ('MozTransition' in document.body.style) {
@@ -41,7 +55,8 @@ var ContentBox = {
 
 	setContent: function(content, w, h) {
 		content.style.margin = '10px';
-		$c(this.b);
+		while (this.b.lastChild)
+			this.b.removeChild(this.b.lastChild);
 		this.b.appendChild(content);
 		if (!!w && !!h) {
 			this.resize(w, h);
@@ -65,7 +80,10 @@ var ContentBox = {
 		if (typeof this.beforeHide == 'function' && !this.beforeHide()) {
 			return;
 		}
-		$cna(document.body, 'db-hidden');
+
+		if (!/\bdb-hidden\b/.test(document.body.className))
+			document.body.className += ' db-hidden';
+
 		this.hidden = true;
 		if (typeof this.afterHide == 'function') {
 			this.afterHide();
@@ -73,7 +91,8 @@ var ContentBox = {
 	},
 
 	show: function() {
-		$cnr(document.body, 'db-hidden');
+		document.body.className = document.body.className.replace(/\s+db-hidden\b/g, '');
+
 		if (typeof this.afterShow == 'function') {
 			if (this.t) {
 				this.tFunc = this.afterShow;
@@ -85,6 +104,10 @@ var ContentBox = {
 	}
 };
 
-_loadList.push(function() {
-	ContentBox.init();
-});
+if (window.addEventListener) {
+	window.addEventListener('DOMContentLoaded', ContentBox.onload, false);
+	window.addEventListener('load', ContentBox.onload, false);
+} else {
+	document.onreadystatechange = ContentBox.onload;
+	window.attachEvent('onload', ContentBox.onload);
+}

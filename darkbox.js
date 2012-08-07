@@ -1,3 +1,12 @@
+if (typeof Array.prototype.indexOf != 'function') {
+  Array.prototype.indexOf = function(e) {
+    for (var i = 0, iCount = this.length; i < iCount; i++)
+      if (this[i] == e)
+        return i;
+    return -1;
+  };
+}
+
 var DarkBox = {
 
 	list: [],
@@ -5,12 +14,26 @@ var DarkBox = {
 	desc: null,
 	tFunc: null,
 
+	onload: function() {
+		if (window.removeEventListener) {
+			window.removeEventListener('DOMContentLoaded', DarkBox.onload, false);
+			window.removeEventListener('load', DarkBox.onload, false);
+		} else {
+			if (document.readyState != "complete")
+				return;
+			document.onreadystatechange = null;
+			window.detachEvent('onload', DarkBox.onload);
+		}
+		DarkBox.init();
+	},
+
 	init: function() {
 		var self = this;
 		this.listIndex = -1;
 		this.hidden = true;
 
-		$cna(document.body, 'db-hidden');
+		if (!/\bdb-hidden\b/.test(document.body.className))
+			document.body.className += ' db-hidden';
 
 		this.t = false;
 		if ('MozTransition' in document.body.style) {
@@ -156,7 +179,9 @@ var DarkBox = {
 	},
 
 	hide: function() {
-		$cna(document.body, 'db-hidden');
+		if (!/\bdb-hidden\b/.test(document.body.className))
+			document.body.className += ' db-hidden';
+
 		this.hidden = true;
 		this.b.className = 'noimg';
 		this.c.src = '';
@@ -166,7 +191,8 @@ var DarkBox = {
 	},
 
 	show: function(src, desc) {
-		$cnr(document.body, 'db-hidden');
+		document.body.className = document.body.className.replace(/\s+db-hidden\b/g, '');
+
 		if (typeof src == 'number' && this.list) {
 			this.listIndex = src;
 			this.c.src = this.list[src];
@@ -231,6 +257,10 @@ var DarkBox = {
 	}
 };
 
-_loadList.push(function() {
-	DarkBox.init();
-});
+if (window.addEventListener) {
+	window.addEventListener('DOMContentLoaded', DarkBox.onload, false);
+	window.addEventListener('load', DarkBox.onload, false);
+} else {
+	document.onreadystatechange = DarkBox.onload;
+	window.attachEvent('onload', DarkBox.onload);
+}
