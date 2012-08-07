@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DarkBox</title>
+<link rel="stylesheet" href="../darkbox.css" type="text/css" />
+</head>
+<body>
+<h1>DarkBox</h1>
+<h2>Example: Slideshow</h2>
+<p>To load a series of images, all you need to do is set an array of filenames to <code>DarkBox.list</code>, and call <code>DarkBox.show(x)</code> where <code>x</code> is an index in the array. To set descriptions, make <code>DarkBox.descriptions</code> an array of all the descriptions, or set individual descriptions. You can include HTML in your description.</p>
+<pre>
+// list is an array of image URLs
+DarkBox.list = ["cat.jpg","telephoneboxes.jpg","dog.jpg"];
+
+// you can add to it programatically too
+DarkBox.list.push("cupcake.jpg");
+
+// descriptions is an array of descriptions, the index of each matches the appropriate image
+DarkBox.descriptions [1] = "Telephone Boxes";
+DarkBox.descriptions [3] = "&lt;i&gt;Individually Boxed Earth Cupcakes&lt;/i&gt;&lt;br /&gt;by clevercupcakes";
+</pre>
+<button type="button" onclick="DarkBox.show(0);">DarkBox.show(0);</button>
+<button type="button" onclick="DarkBox.show(1);">DarkBox.show(1);</button>
+<button type="button" onclick="DarkBox.show(2);">DarkBox.show(2);</button>
+<button type="button" onclick="DarkBox.show(3);">DarkBox.show(3);</button>
+
+<h2>Example: Individual image</h2>
+<p>DarkBox can display a single image, even if a list has been set (like on this page). Just call <code>DarkBox.show(src, [desc])</code> where <code>src</code> is an image URL and <code>desc</code> is an optional description.</p>
+<button type="button" onclick="DarkBox.show(src);">DarkBox.show(src);</button>
+<button type="button" onclick="DarkBox.show(src, desc);">DarkBox.show(src, desc);</button>
+
+<h3>Images on this page:</h3>
+<ul>
+<li><a href="http://www.flickr.com/photos/greencolander/600757415/"><i>slowly getting into the box</i> by greencolander</a></li>
+<li><a href="http://www.flickr.com/photos/malias/50216300/"><i>Telephone Boxes</i> by malias</a></li>
+<li><a href="http://www.flickr.com/photos/emdot/22322409/"><i>the ballad of calvin and the printer box</i> by emdot</a></li>
+<li><a href="http://www.flickr.com/photos/clevercupcakes/3655973440/"><i>Individually Boxed Earth Cupcakes</i> by clevercupcakes</a></li>
+<li><a href="http://www.flickr.com/photos/mammaoca2008/4344228722/"><i>Origami boxes</i> by mammaoca2008</a></li>
+</ul>
+
+<script src="/common/tools/extend.js" type="text/javascript"></script>
+<script src="../darkbox.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+DarkBox.list = ["cat.jpg","telephoneboxes.jpg","dog.jpg","cupcake.jpg"];
+DarkBox.descriptions = [null, "Telephone Boxes", null, "<i>Individually Boxed Earth Cupcakes</i><br />by clevercupcakes"];
+DarkBox.preload ("origami.jpg");
+var src = "origami.jpg";
+var desc = "<i>Origami boxes</i> by mammaoca2008";
+
+</script>
+</body>
+</html>
