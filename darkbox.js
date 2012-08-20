@@ -35,13 +35,16 @@ var DarkBox = {
 		if (!/\bdb-hidden\b/.test(document.body.className))
 			document.body.className += ' db-hidden';
 
-		this.t = false;
-		if ('MozTransition' in document.body.style) {
-			this.t = 'transitionend';
-		} else if ('WebkitTransition' in document.body.style) {
-			this.t = 'webkitTransitionEnd';
-		} else if ('OTransition' in document.body.style) {
-			this.t = 'oTransitionEnd';
+		this.t = null;
+		var transitions = {
+			'transition': 'transitionend',
+			'MozTransition': 'transitionend',
+			'WebkitTransition': 'webkitTransitionEnd',
+			'OTransition': 'oTransitionEnd'
+		};
+		for (var styleProperty in transitions) {
+			if (styleProperty in document.body.style)
+				this.t = transitions[styleProperty];
 		}
 
 		this.a = document.createElement('div');
