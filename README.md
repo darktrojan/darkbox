@@ -21,3 +21,21 @@ Example: Individual image
 -------------------------
 
 DarkBox can display a single image, even if a list has been set (like on this page). Just call `DarkBox.show(src, [desc])` where `src` is an image URL and `desc` is an optional description.
+
+ContentBox
+==========
+
+ContentBox is an adaptation of DarkBox to display HTML elements such as modal windows.
+
+	var test = document.getElementById('test');
+	ContentBox.setContent(test, 600, 400);
+
+You can set callbacks before and after ContentBox is shown or hidden for custom handling (e.g. to prevent it being hidden if the input of a form is invalid):
+
+	ContentBox.beforeHide = function() {
+		test.style.background = '';
+		return true;
+	};
+	ContentBox.afterShow = function() {
+		test.style.background = 'green';
+	};
