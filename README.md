@@ -20,7 +20,7 @@ To load a series of images, all you need to do is set an array of filenames to `
 Example: Individual image
 -------------------------
 
-DarkBox can display a single image, even if a list has been set (like on this page). Just call `DarkBox.show(src, [desc])` where `src` is an image URL and `desc` is an optional description.
+DarkBox can display a single image, even if a list has been set. Just call `DarkBox.show(src, [desc])` where `src` is an image URL and `desc` is an optional description.
 
 ContentBox
 ==========
