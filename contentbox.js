@@ -22,13 +22,16 @@ var ContentBox = {
 		if (!/\bdb-hidden\b/.test(document.body.className))
 			document.body.className += ' db-hidden';
 
-		this.t = false;
-		if ('MozTransition' in document.body.style) {
-			this.t = 'transitionend';
-		} else if ('WebkitTransition' in document.body.style) {
-			this.t = 'webkitTransitionEnd';
-		} else if ('OTransition' in document.body.style) {
-			this.t = 'oTransitionEnd';
+		this.t = null;
+		var transitions = {
+			'transition': 'transitionend',
+			'MozTransition': 'transitionend',
+			'WebkitTransition': 'webkitTransitionEnd',
+			'OTransition': 'oTransitionEnd'
+		};
+		for (var styleProperty in transitions) {
+			if (styleProperty in document.body.style)
+				this.t = transitions[styleProperty];
 		}
 
 		this.a = document.createElement('div');
@@ -44,7 +47,8 @@ var ContentBox = {
 		if (this.t) {
 			this.b.addEventListener(this.t, function(event) {
 				var computed = getComputedStyle(this, null).getPropertyValue(event.propertyName);
-				if (self.tFunc && event.propertyName == 'opacity' && computed == 1) {
+				var complete = (computed == 0) == (/\bdb-hidden\b/.test(document.body.className));
+				if (self.tFunc && event.propertyName == 'opacity' && complete) {
 					self.tFunc(event);
 					self.tFunc = null;
 				}
@@ -86,19 +90,25 @@ var ContentBox = {
 
 		this.hidden = true;
 		if (typeof this.afterHide == 'function') {
-			this.afterHide();
+			if (this.t)
+				this.tFunc = this.afterHide;
+			else
+				this.afterHide();
 		}
 	},
 
 	show: function() {
+		if (typeof this.beforeShow == 'function' && !this.beforeShow()) {
+			return;
+		}
+
 		document.body.className = document.body.className.replace(/\s+db-hidden\b/g, '');
 
 		if (typeof this.afterShow == 'function') {
-			if (this.t) {
+			if (this.t)
 				this.tFunc = this.afterShow;
-			} else {
+			else
 				this.afterShow();
-			}
 		}
 		this.hidden = false;
 	}

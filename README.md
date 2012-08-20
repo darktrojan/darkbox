@@ -32,10 +32,11 @@ ContentBox is an adaptation of DarkBox to display HTML elements such as modal wi
 
 You can set callbacks before and after ContentBox is shown or hidden for custom handling (e.g. to prevent it being hidden if the input of a form is invalid):
 
-	ContentBox.beforeHide = function() {
-		test.style.background = '';
-		return true;
-	};
 	ContentBox.afterShow = function() {
 		test.style.background = 'green';
+	};
+	ContentBox.beforeHide = function() {
+		test.style.background = '';
+		// return false to prevent hiding
+		return true;
 	};

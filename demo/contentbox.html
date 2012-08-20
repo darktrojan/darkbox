@@ -17,14 +17,14 @@ var test = document.getElementById('test');
 
 window.onload = function() {
 	ContentBox.setContent(test, 600, 400);
+	ContentBox.afterShow = function() {
+		test.style.background = 'green';
+		ContentBox.resize(600, 200);
+	};
 	ContentBox.beforeHide = function() {
 		test.style.background = '';
 		ContentBox.resize(600, 400);
 		return true;
-	};
-	ContentBox.afterShow = function() {
-		test.style.background = 'green';
-		ContentBox.resize(600, 200);
 	};
 
 	setTimeout('ContentBox.show();', 500);
