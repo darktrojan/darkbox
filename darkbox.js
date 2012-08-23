@@ -194,7 +194,7 @@ var DarkBox = {
 	},
 
 	show: function(src, desc) {
-		document.body.className = document.body.className.replace(/\s+db-hidden\b/g, '');
+		document.body.className = document.body.className.replace(/\s*db-hidden\b/g, '');
 
 		if (typeof src == 'number' && this.list) {
 			this.listIndex = src;

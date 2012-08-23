@@ -102,7 +102,7 @@ var ContentBox = {
 			return;
 		}
 
-		document.body.className = document.body.className.replace(/\s+db-hidden\b/g, '');
+		document.body.className = document.body.className.replace(/\s*db-hidden\b/g, '');
 
 		if (typeof this.afterShow == 'function') {
 			if (this.t)
