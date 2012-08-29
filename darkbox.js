@@ -21,13 +21,16 @@ var DarkBox = {
 		} else {
 			if (document.readyState != "complete")
 				return;
-			document.onreadystatechange = null;
+			document.detachEvent('onreadystatechange', DarkBox.onload);
 			window.detachEvent('onload', DarkBox.onload);
 		}
 		DarkBox.init();
 	},
 
 	init: function() {
+		if ('a' in this)
+			return;
+
 		var self = this;
 		this.listIndex = -1;
 		this.hidden = true;
@@ -264,6 +267,6 @@ if (window.addEventListener) {
 	window.addEventListener('DOMContentLoaded', DarkBox.onload, false);
 	window.addEventListener('load', DarkBox.onload, false);
 } else {
-	document.onreadystatechange = DarkBox.onload;
+	document.attachEvent('onreadystatechange', DarkBox.onload);
 	window.attachEvent('onload', DarkBox.onload);
 }

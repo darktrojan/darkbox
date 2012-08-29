@@ -9,13 +9,16 @@ var ContentBox = {
 		} else {
 			if (document.readyState != "complete")
 				return;
-			document.onreadystatechange = null;
+			document.detachEvent('onreadystatechange', ContentBox.onload);
 			window.detachEvent('onload', ContentBox.onload);
 		}
 		ContentBox.init();
 	},
 
 	init: function() {
+		if ('a' in this)
+			return;
+
 		var self = this;
 		this.hidden = true;
 
@@ -118,6 +121,6 @@ if (window.addEventListener) {
 	window.addEventListener('DOMContentLoaded', ContentBox.onload, false);
 	window.addEventListener('load', ContentBox.onload, false);
 } else {
-	document.onreadystatechange = ContentBox.onload;
+	document.attachEvent('onreadystatechange', ContentBox.onload);
 	window.attachEvent('onload', ContentBox.onload);
 }
