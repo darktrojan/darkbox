@@ -49,12 +49,10 @@ var ContentBox = {
 		this.b.className = 'content-box';
 		if (this.t) {
 			this.b.addEventListener(this.t, function(event) {
-				var computed = getComputedStyle(this, null).getPropertyValue(event.propertyName);
-				var complete = (computed == 0) == (/\bdb-hidden\b/.test(document.body.className));
-				if (self.tFunc && event.propertyName == 'opacity' && complete) {
-					self.tFunc(event);
-					self.tFunc = null;
-				}
+				if (!self.tFunc || event.propertyName != 'opacity')
+					return;
+				self.tFunc(event);
+				self.tFunc = null;
 			}, false);
 		}
 		document.body.appendChild(this.b);
