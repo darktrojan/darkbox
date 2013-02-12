@@ -63,6 +63,11 @@
 	background-position: center center;
 	background-repeat: no-repeat;
 	visibility: visible;
+
+		-moz-transition: visibility 0s linear 0.5s;
+		-ms-transition: visibility 0s linear 0.5s;
+		-o-transition: visibility 0s linear 0.5s;
+		-webkit-transition: visibility 0s linear 0.5s;
 	transition: visibility 0s linear 0.5s;
 }
 
