@@ -70,9 +70,14 @@ var DarkBox = {
 		}
 		document.body.appendChild(this.b);
 
+		var loading = document.createElement('div');
+		loading.id = 'darkbox-loading';
+		this.b.appendChild(loading);
+
 		this.c = document.createElement('img');
 		this.c.id = 'darkbox-c';
 		this.c.onload = function() {
+			self.b.className = 'noimg';
 			var delay = self.resize(this.width + 20, this.height + 20);
 
 			if (delay && self.t) {
@@ -169,7 +174,7 @@ var DarkBox = {
 
 	replaceImage: function(src) {
 		var self = this;
-		this.b.className = 'noimg';
+		this.b.className = 'noimg loading';
 		this.d.className = 'nodesc';
 
 		if (this.t) {
@@ -199,6 +204,7 @@ var DarkBox = {
 	show: function(src, desc) {
 		document.body.className = document.body.className.replace(/\s*db-hidden\b/g, '');
 
+		this.b.className = 'noimg loading';
 		if (typeof src == 'number' && this.list) {
 			this.listIndex = src;
 			this.c.src = this.list[src];
