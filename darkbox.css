@@ -76,6 +76,14 @@
 	overflow: hidden;
 }
 
+#darkbox-b.content-box.db-fixed {
+	top: 75px;
+	margin-top: 0;
+	height: auto;
+	overflow: auto;
+	max-height: calc(100% - 150px);
+}
+
 .db-hidden #darkbox-b {
 	opacity: 0;
 	visibility: hidden;

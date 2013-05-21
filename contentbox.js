@@ -75,8 +75,10 @@ var ContentBox = {
 
 		this.b.style.marginLeft = '-' + Math.ceil(w / 2) + 'px';
 		this.b.style.width = w + 'px';
-		this.b.style.marginTop = '-' + Math.ceil(h / 2) + 'px';
-		this.b.style.height = h + 'px';
+		if (!/\bdb-fixed\b/.test(this.b.className)) {
+			this.b.style.marginTop = '-' + Math.ceil(h / 2) + 'px';
+			this.b.style.height = h + 'px';
+		}
 
 		return true;
 	},
