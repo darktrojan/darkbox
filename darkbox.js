@@ -35,8 +35,7 @@ var DarkBox = {
 		this.listIndex = -1;
 		this.hidden = true;
 
-		if (!/\bdb-hidden\b/.test(document.body.className))
-			document.body.className += ' db-hidden';
+		document.body.classList.add('db-hidden');
 
 		this.t = null;
 		var transitions = {
@@ -59,7 +58,7 @@ var DarkBox = {
 
 		this.b = document.createElement('div');
 		this.b.id = 'darkbox-b';
-		this.b.className = 'noimg';
+		this.b.className = 'db-noimg';
 		if (this.t) {
 			this.b.addEventListener(this.t, function(event) {
 				if (self.tFunc) {
@@ -77,13 +76,17 @@ var DarkBox = {
 		this.c = document.createElement('img');
 		this.c.id = 'darkbox-c';
 		this.c.onload = function() {
-			self.b.className = 'noimg';
+			self.b.classList.add('db-noimg');
 			var delay = self.resize(this.width + 20, this.height + 20);
 
 			if (delay && self.t) {
-				self.tFunc = function() { self.b.className = ''; };
+				self.tFunc = function() {
+					self.b.classList.remove('db-noimg');
+					self.b.classList.remove('db-loading');
+				};
 			} else {
-				self.b.className = '';
+				self.b.classList.remove('db-noimg');
+				self.b.classList.remove('db-loading');
 			}
 			var desc = null;
 			if (self.listIndex >= 0) {
@@ -97,10 +100,10 @@ var DarkBox = {
 			}
 			if (desc) {
 				self.d.innerHTML = desc;
-				self.d.className = '';
+				self.d.classList.remove('db-nodesc');
 			} else {
 				self.d.innerHTML = '';
-				self.d.className = 'nodesc';
+				self.d.classList.add('db-nodesc');
 			}
 			if (self.listIndex >= 0 && self.listIndex < self.list.length - 2) {
 				self.preload(self.list[self.listIndex + 2]);
@@ -110,7 +113,7 @@ var DarkBox = {
 
 		this.d = document.createElement('div');
 		this.d.id = 'darkbox-d';
-		this.d.className = 'nodesc';
+		this.d.className = 'db-nodesc';
 		this.b.appendChild(this.d);
 
 		this.l = document.createElement('a');
@@ -174,8 +177,9 @@ var DarkBox = {
 
 	replaceImage: function(src) {
 		var self = this;
-		this.b.className = 'noimg loading';
-		this.d.className = 'nodesc';
+		this.b.classList.add('db-noimg');
+		this.b.classList.add('db-loading');
+		this.d.classList.add('db-nodesc');
 
 		if (this.t) {
 			var self = this;
@@ -190,11 +194,10 @@ var DarkBox = {
 	},
 
 	hide: function() {
-		if (!/\bdb-hidden\b/.test(document.body.className))
-			document.body.className += ' db-hidden';
+		document.body.classList.add('db-hidden');
 
 		this.hidden = true;
-		this.b.className = 'noimg';
+		this.b.classList.add('db-noimg');
 		this.c.src = '';
 		if (typeof this.afterHide == 'function') {
 			this.afterHide();
@@ -202,9 +205,10 @@ var DarkBox = {
 	},
 
 	show: function(src, desc) {
-		document.body.className = document.body.className.replace(/\s*db-hidden\b/g, '');
+		document.body.classList.remove('db-hidden');
 
-		this.b.className = 'noimg loading';
+		this.b.classList.add('db-noimg');
+		this.b.classList.add('db-loading');
 		if (typeof src == 'number' && this.list) {
 			this.listIndex = src;
 			this.c.src = this.list[src];

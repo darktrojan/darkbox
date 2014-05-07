@@ -22,8 +22,7 @@ var ContentBox = {
 		var self = this;
 		this.hidden = true;
 
-		if (!/\bdb-hidden\b/.test(document.body.className))
-			document.body.className += ' db-hidden';
+		document.body.classList.add('db-hidden');
 
 		this.t = null;
 		var transitions = {
@@ -75,7 +74,8 @@ var ContentBox = {
 
 		this.b.style.marginLeft = '-' + Math.ceil(w / 2) + 'px';
 		this.b.style.width = w + 'px';
-		if (!/\bdb-fixed\b/.test(this.b.className)) {
+
+		if (!this.b.classList.contains('db-fixed')) {
 			this.b.style.marginTop = '-' + Math.ceil(h / 2) + 'px';
 			this.b.style.height = h + 'px';
 		}
@@ -88,8 +88,7 @@ var ContentBox = {
 			return;
 		}
 
-		if (!/\bdb-hidden\b/.test(document.body.className))
-			document.body.className += ' db-hidden';
+		document.body.classList.add('db-hidden');
 
 		this.hidden = true;
 		if (typeof this.afterHide == 'function') {
@@ -105,7 +104,7 @@ var ContentBox = {
 			return;
 		}
 
-		document.body.className = document.body.className.replace(/\s*db-hidden\b/g, '');
+		document.body.classList.remove('db-hidden');
 
 		if (typeof this.afterShow == 'function') {
 			if (this.t)

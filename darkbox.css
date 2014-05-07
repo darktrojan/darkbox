@@ -58,7 +58,7 @@
 	bottom: 0;
 	visibility: hidden;
 }
-#darkbox-b.loading > #darkbox-loading {
+#darkbox-b.db-loading > #darkbox-loading {
 	background-image: url(flash.gif);
 	background-position: center center;
 	background-repeat: no-repeat;
@@ -117,7 +117,7 @@
 	text-shadow: 0 0 3px #000;
 }
 
-#darkbox-d.nodesc {
+#darkbox-d.db-nodesc {
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
@@ -158,7 +158,7 @@
 	transition: opacity 0.25s;
 }
 
-.noimg #darkbox-c, .noimg #darkbox-d, .noimg #darkbox-l, .noimg #darkbox-r {
+.db-noimg #darkbox-c, .db-noimg #darkbox-d, .db-noimg #darkbox-l, .db-noimg #darkbox-r {
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
