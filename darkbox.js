@@ -15,16 +15,13 @@ var DarkBox = {
 	tFunc: null,
 
 	onload: function() {
-		if (window.removeEventListener) {
-			window.removeEventListener('DOMContentLoaded', DarkBox.onload, false);
-			window.removeEventListener('load', DarkBox.onload, false);
-		} else {
-			if (document.readyState != "complete")
-				return;
-			document.detachEvent('onreadystatechange', DarkBox.onload);
-			window.detachEvent('onload', DarkBox.onload);
-		}
+		window.removeEventListener('DOMContentLoaded', DarkBox.onload, false);
+		window.removeEventListener('load', DarkBox.onload, false);
 		DarkBox.init();
+
+		if (typeof DarkBox.onready == 'function') {
+			DarkBox.onready();
+		}
 	},
 
 	init: function() {
@@ -130,15 +127,9 @@ var DarkBox = {
 		};
 		this.b.appendChild(this.r);
 
-		if (typeof addEventListener == 'function') {
-			document.documentElement.addEventListener('keydown', function(event) {
-				self.onkeydown(event);
-			}, false);
-		} else {
-			document.documentElement.attachEvent('onkeydown', function() {
-				self.onkeydown(window.event);
-			});
-		}
+		document.documentElement.addEventListener('keydown', function(event) {
+			self.onkeydown(event);
+		}, false);
 
 		var ss = document.styleSheets;
 		for (var i = 0, iCount = ss.length; i < iCount; i++) {
@@ -276,7 +267,4 @@ var DarkBox = {
 if (window.addEventListener) {
 	window.addEventListener('DOMContentLoaded', DarkBox.onload, false);
 	window.addEventListener('load', DarkBox.onload, false);
-} else {
-	document.attachEvent('onreadystatechange', DarkBox.onload);
-	window.attachEvent('onload', DarkBox.onload);
 }

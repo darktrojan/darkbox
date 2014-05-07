@@ -3,16 +3,13 @@ var ContentBox = {
 	tFunc: null,
 
 	onload: function() {
-		if (window.removeEventListener) {
-			window.removeEventListener('DOMContentLoaded', ContentBox.onload, false);
-			window.removeEventListener('load', ContentBox.onload, false);
-		} else {
-			if (document.readyState != "complete")
-				return;
-			document.detachEvent('onreadystatechange', ContentBox.onload);
-			window.detachEvent('onload', ContentBox.onload);
-		}
+		window.removeEventListener('DOMContentLoaded', ContentBox.onload, false);
+		window.removeEventListener('load', ContentBox.onload, false);
 		ContentBox.init();
+
+		if (typeof ContentBox.onready == 'function') {
+			ContentBox.onready();
+		}
 	},
 
 	init: function() {
@@ -119,7 +116,4 @@ var ContentBox = {
 if (window.addEventListener) {
 	window.addEventListener('DOMContentLoaded', ContentBox.onload, false);
 	window.addEventListener('load', ContentBox.onload, false);
-} else {
-	document.attachEvent('onreadystatechange', ContentBox.onload);
-	window.attachEvent('onload', ContentBox.onload);
 }
