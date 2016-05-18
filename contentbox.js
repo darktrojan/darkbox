@@ -29,8 +29,10 @@ var ContentBox = {
 			'OTransition': 'oTransitionEnd'
 		};
 		for (var styleProperty in transitions) {
-			if (styleProperty in document.body.style)
+			if (styleProperty in document.body.style) {
 				this.t = transitions[styleProperty];
+				break;
+			}
 		}
 
 		this.a = document.createElement('div');

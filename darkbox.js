@@ -1,10 +1,10 @@
 if (typeof Array.prototype.indexOf != 'function') {
-  Array.prototype.indexOf = function(e) {
-    for (var i = 0, iCount = this.length; i < iCount; i++)
-      if (this[i] == e)
-        return i;
-    return -1;
-  };
+	Array.prototype.indexOf = function(e) {
+		for (var i = 0, iCount = this.length; i < iCount; i++)
+			if (this[i] == e)
+				return i;
+		return -1;
+	};
 }
 
 var DarkBox = {
@@ -42,8 +42,10 @@ var DarkBox = {
 			'OTransition': 'oTransitionEnd'
 		};
 		for (var styleProperty in transitions) {
-			if (styleProperty in document.body.style)
+			if (styleProperty in document.body.style) {
 				this.t = transitions[styleProperty];
+				break;
+			}
 		}
 
 		this.a = document.createElement('div');
@@ -173,7 +175,6 @@ var DarkBox = {
 		this.d.classList.add('db-nodesc');
 
 		if (this.t) {
-			var self = this;
 			this.tFunc = function() {
 				self.d.innerHTML = '';
 				self.c.src = src;
