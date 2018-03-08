@@ -41,9 +41,6 @@
 	visibility: hidden;
 }
 #darkbox-b.db-loading > #darkbox-loading {
-	background-image: url(flash.gif);
-	background-position: center center;
-	background-repeat: no-repeat;
 	visibility: visible;
 	transition: visibility 0s linear 0.5s;
 }

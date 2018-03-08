@@ -120,6 +120,8 @@ var DarkBox = {
 		document.documentElement.addEventListener('keydown', function(event) {
 			self.onkeydown(event);
 		}, false);
+		document.body.addEventListener('touchstart', this);
+		document.body.addEventListener('touchend', this);
 
 		window.addEventListener('resize', function() {
 			if (self.c.complete) {
@@ -254,6 +256,44 @@ var DarkBox = {
 		case 40: // Down
 			event.preventDefault();
 			break;
+		}
+	},
+
+	touchCoords: null,
+	handleEvent: function(event) {
+		if (this.hidden) {
+			return;
+		}
+
+		switch (event.type) {
+		case 'touchstart':
+			if (event.touches.length == 1) {
+				this.touchCoords = {
+					x: event.touches[0].clientX,
+					y: event.touches[0].clientY
+				};
+				event.preventDefault();
+			}
+			break;
+		case 'touchend':
+			if (this.touchCoords) {
+				var deltaX = event.changedTouches[0].clientX - this.touchCoords.x;
+				var deltaY = event.changedTouches[0].clientY - this.touchCoords.y;
+				if (deltaX < 10 && deltaY < 10) {
+					event.target.dispatchEvent(new MouseEvent('click', {
+						clientX: event.clientX,
+						clientY: event.clientY
+					}));
+				} else if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) >= window.innerWidth / 5) {
+					if (deltaX > 0) {
+						this.previous();
+					} else {
+						this.next();
+					}
+				}
+				this.touchCoords = null;
+				event.preventDefault();
+			}
 		}
 	},
 
