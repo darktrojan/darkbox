@@ -34,19 +34,7 @@ var DarkBox = {
 
 		document.body.classList.add('db-hidden');
 
-		this.t = null;
-		var transitions = {
-			'transition': 'transitionend',
-			'MozTransition': 'transitionend',
-			'WebkitTransition': 'webkitTransitionEnd',
-			'OTransition': 'oTransitionEnd'
-		};
-		for (var styleProperty in transitions) {
-			if (styleProperty in document.body.style) {
-				this.t = transitions[styleProperty];
-				break;
-			}
-		}
+		this.t = 'transition' in document.body.style ? 'transitionend' : null;
 
 		this.a = document.createElement('div');
 		this.a.id = 'darkbox-a';
@@ -76,7 +64,7 @@ var DarkBox = {
 		this.c.id = 'darkbox-c';
 		this.c.onload = function() {
 			self.b.classList.add('db-noimg');
-			var delay = self.resize(this.width + 20, this.height + 20);
+			var delay = self.resize(this.naturalWidth, this.naturalHeight);
 
 			if (delay && self.t) {
 				self.tFunc = function() {
@@ -133,6 +121,12 @@ var DarkBox = {
 			self.onkeydown(event);
 		}, false);
 
+		window.addEventListener('resize', function() {
+			if (self.c.complete) {
+				self.resize(self.c.naturalWidth, self.c.naturalHeight);
+			}
+		});
+
 		var ss = document.styleSheets;
 		for (var i = 0, iCount = ss.length; i < iCount; i++) {
 			var m = (/^(.*\/)darkbox\.css(\?|:|$)/.exec(ss[i].href));
@@ -152,6 +146,13 @@ var DarkBox = {
 	},
 
 	resize: function(w, h) {
+		var maxWidth = window.innerWidth - 50;
+		var maxHeight = window.innerHeight - 50;
+
+		var scale = Math.min(maxWidth / (w), maxHeight / (h), 1);
+		w = w * scale + 20;
+		h = h * scale + 20;
+
 		if (this.b.style.width == w + 'px' && this.b.style.height == h + 'px') {
 			return false;
 		}
@@ -235,11 +236,23 @@ var DarkBox = {
 			return;
 		}
 		switch (event.keyCode) {
-		case 37:
-			this.previous();
+		case 27: // Escape
+			this.hide();
+			event.preventDefault();
 			break;
-		case 39:
+		case 37: // Left
+			this.previous();
+			event.preventDefault();
+			break;
+		case 39: // Right
 			this.next();
+			event.preventDefault();
+			break;
+		case 33: // Page Up
+		case 34: // Page Down
+		case 38: // Up
+		case 40: // Down
+			event.preventDefault();
 			break;
 		}
 	},
