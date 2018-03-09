@@ -1,28 +1,8 @@
-if (typeof Array.prototype.indexOf != 'function') {
-	Array.prototype.indexOf = function(e) {
-		for (var i = 0, iCount = this.length; i < iCount; i++)
-			if (this[i] == e)
-				return i;
-		return -1;
-	};
-}
-
 var DarkBox = {
-
 	list: [],
 	descriptions: [],
 	desc: null,
-	tFunc: null,
-
-	onload: function() {
-		window.removeEventListener('DOMContentLoaded', DarkBox.onload, false);
-		window.removeEventListener('load', DarkBox.onload, false);
-		DarkBox.init();
-
-		if (typeof DarkBox.onready == 'function') {
-			DarkBox.onready();
-		}
-	},
+	ontransitionend: null,
 
 	init: function() {
 		if ('a' in this)
@@ -34,8 +14,6 @@ var DarkBox = {
 
 		document.body.classList.add('db-hidden');
 
-		this.t = 'transition' in document.body.style ? 'transitionend' : null;
-
 		this.a = document.createElement('div');
 		this.a.id = 'darkbox-a';
 		this.a.onclick = function() {
@@ -46,14 +24,7 @@ var DarkBox = {
 		this.b = document.createElement('div');
 		this.b.id = 'darkbox-b';
 		this.b.className = 'db-noimg';
-		if (this.t) {
-			this.b.addEventListener(this.t, function(event) {
-				if (self.tFunc) {
-					self.tFunc(event);
-					self.tFunc = null;
-				}
-			}, false);
-		}
+		this.b.addEventListener('transitionend', this);
 		document.body.appendChild(this.b);
 
 		var loading = document.createElement('div');
@@ -66,8 +37,8 @@ var DarkBox = {
 			self.b.classList.add('db-noimg');
 			var delay = self.resize(this.naturalWidth, this.naturalHeight);
 
-			if (delay && self.t) {
-				self.tFunc = function() {
+			if (delay) {
+				self.ontransitionend = function() {
 					self.b.classList.remove('db-noimg');
 					self.b.classList.remove('db-loading');
 				};
@@ -117,17 +88,10 @@ var DarkBox = {
 		};
 		this.b.appendChild(this.r);
 
-		document.documentElement.addEventListener('keydown', function(event) {
-			self.onkeydown(event);
-		}, false);
+		window.addEventListener('resize', this);
+		document.documentElement.addEventListener('keydown', this);
 		document.body.addEventListener('touchstart', this);
 		document.body.addEventListener('touchend', this);
-
-		window.addEventListener('resize', function() {
-			if (self.c.complete) {
-				self.resize(self.c.naturalWidth, self.c.naturalHeight);
-			}
-		});
 
 		var ss = document.styleSheets;
 		for (var i = 0, iCount = ss.length; i < iCount; i++) {
@@ -177,15 +141,10 @@ var DarkBox = {
 		this.b.classList.add('db-loading');
 		this.d.classList.add('db-nodesc');
 
-		if (this.t) {
-			this.tFunc = function() {
-				self.d.innerHTML = '';
-				self.c.src = src;
-			};
-		} else {
-			this.d.innerHTML = ''; // out of order for onload
-			this.c.src = src;
-		}
+		this.ontransitionend = function() {
+			self.d.innerHTML = '';
+			self.c.src = src;
+		};
 	},
 
 	hide: function() {
@@ -266,6 +225,28 @@ var DarkBox = {
 		}
 
 		switch (event.type) {
+		case 'DOMContentLoaded':
+			window.removeEventListener('DOMContentLoaded', this);
+			this.init();
+
+			if (typeof this.onready == 'function') {
+				this.onready.call();
+			}
+			break;
+		case 'transitionend':
+			if (this.ontransitionend) {
+				this.ontransitionend.call(event);
+				this.ontransitionend = null;
+			}
+			break;
+		case 'resize':
+			if (this.c.complete) {
+				this.resize(this.c.naturalWidth, this.c.naturalHeight);
+			}
+			break;
+		case 'keydown':
+			this.onkeydown(event);
+			break;
 		case 'touchstart':
 			if (event.touches.length == 1) {
 				this.touchCoords = {
@@ -294,6 +275,7 @@ var DarkBox = {
 				this.touchCoords = null;
 				event.preventDefault();
 			}
+			break;
 		}
 	},
 
@@ -318,7 +300,4 @@ var DarkBox = {
 	}
 };
 
-if (window.addEventListener) {
-	window.addEventListener('DOMContentLoaded', DarkBox.onload, false);
-	window.addEventListener('load', DarkBox.onload, false);
-}
+window.addEventListener('DOMContentLoaded', DarkBox);

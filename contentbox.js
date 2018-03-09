@@ -1,39 +1,15 @@
 var ContentBox = {
-
-	tFunc: null,
-
-	onload: function() {
-		window.removeEventListener('DOMContentLoaded', ContentBox.onload, false);
-		window.removeEventListener('load', ContentBox.onload, false);
-		ContentBox.init();
-
-		if (typeof ContentBox.onready == 'function') {
-			ContentBox.onready();
-		}
-	},
+	ontransitionend: null,
 
 	init: function() {
-		if ('a' in this)
+		if ('a' in this) {
 			return;
+		}
 
 		var self = this;
 		this.hidden = true;
 
 		document.body.classList.add('db-hidden');
-
-		this.t = null;
-		var transitions = {
-			'transition': 'transitionend',
-			'MozTransition': 'transitionend',
-			'WebkitTransition': 'webkitTransitionEnd',
-			'OTransition': 'oTransitionEnd'
-		};
-		for (var styleProperty in transitions) {
-			if (styleProperty in document.body.style) {
-				this.t = transitions[styleProperty];
-				break;
-			}
-		}
 
 		this.a = document.createElement('div');
 		this.a.id = 'darkbox-a';
@@ -45,21 +21,15 @@ var ContentBox = {
 		this.b = document.createElement('div');
 		this.b.id = 'darkbox-b';
 		this.b.className = 'content-box';
-		if (this.t) {
-			this.b.addEventListener(this.t, function(event) {
-				if (!self.tFunc || event.propertyName != 'opacity')
-					return;
-				self.tFunc(event);
-				self.tFunc = null;
-			}, false);
-		}
+		this.b.addEventListener('transitionend', this);
 		document.body.appendChild(this.b);
 	},
 
 	setContent: function(content, w, h) {
 		content.style.margin = '10px';
-		while (this.b.lastChild)
+		while (this.b.lastChild) {
 			this.b.removeChild(this.b.lastChild);
+		}
 		this.b.appendChild(content);
 		if (!!w && !!h) {
 			this.resize(w, h);
@@ -91,10 +61,7 @@ var ContentBox = {
 
 		this.hidden = true;
 		if (typeof this.afterHide == 'function') {
-			if (this.t)
-				this.tFunc = this.afterHide;
-			else
-				this.afterHide();
+			this.ontransitionend = this.afterHide;
 		}
 	},
 
@@ -106,16 +73,29 @@ var ContentBox = {
 		document.body.classList.remove('db-hidden');
 
 		if (typeof this.afterShow == 'function') {
-			if (this.t)
-				this.tFunc = this.afterShow;
-			else
-				this.afterShow();
+			this.ontransitionend = this.afterShow;
 		}
 		this.hidden = false;
+	},
+
+	handleEvent: function(event) {
+		switch (event.type) {
+		case 'DOMContentLoaded':
+			window.removeEventListener('DOMContentLoaded', this);
+			this.init();
+
+			if (typeof this.onready == 'function') {
+				this.onready.call();
+			}
+			break;
+		case 'transitionend':
+			if (this.ontransitionend && event.propertyName == 'opacity') {
+				this.ontransitionend.call(event);
+				this.ontransitionend = null;
+			}
+			break;
+		}
 	}
 };
 
-if (window.addEventListener) {
-	window.addEventListener('DOMContentLoaded', ContentBox.onload, false);
-	window.addEventListener('load', ContentBox.onload, false);
-}
+window.addEventListener('DOMContentLoaded', ContentBox);
